@@ -4,7 +4,7 @@
         <v-container>
           <v-row>
             <v-col>
-              <v-btn color="primary">Hello, Vuetify!</v-btn>
+              <v-btn color="primary">Hello Vuetify!</v-btn>
             </v-col>
           </v-row>
         </v-container>
