@@ -8,6 +8,12 @@ export default defineConfig({
             input: 'resources/js/app.js',
             refresh: true,
         }),
-        vue(), // Use Vue 2 plugin
+        vue(),
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
+    
 });
