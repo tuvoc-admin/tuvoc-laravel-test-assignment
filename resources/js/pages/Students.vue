@@ -81,37 +81,37 @@
                 </div>
                 <div>
                   <label>
-                    <span class="mr-1">tuesday</span>
+                    <span class="mr-1">Tuesday</span>
                     <input type="checkbox" v-model="day.tuesday" :label="`tuesday`">
                   </label>
                 </div>
                 <div>
                   <label>
-                    <span class="mr-1">wednesday</span>
+                    <span class="mr-1">Wednesday</span>
                     <input type="checkbox" v-model="day.wednesday" :label="`Monday`">
                   </label>
                 </div>
                 <div>
                   <label>
-                    <span class="mr-1">thursday</span>
+                    <span class="mr-1">Thursday</span>
                     <input type="checkbox" v-model="day.thursday" :label="`Monday`">
                   </label>
                 </div>
                 <div>
                   <label>
-                    <span class="mr-1">friday</span>
+                    <span class="mr-1">Friday</span>
                     <input type="checkbox" v-model="day.friday" :label="`Monday`">
                   </label>
                 </div>
                 <div>
                   <label>
-                    <span class="mr-1">saturday</span>
+                    <span class="mr-1">Saturday</span>
                     <input type="checkbox" v-model="day.saturday" :label="`Monday`">
                   </label>
                 </div>
                 <div>
                   <label>
-                    <span class="mr-1">sunday</span>
+                    <span class="mr-1">Sunday</span>
                     <input type="checkbox" v-model="day.sunday" :label="`Monday`">
                   </label>
                 </div>
@@ -209,6 +209,7 @@ export default {
       }
     },
     openAvailibilityModal(item) {
+      this.resetDays()
       this.currentStudent = item
       if(!isEmpty(item?.availability)){
         const availability = item.availability
