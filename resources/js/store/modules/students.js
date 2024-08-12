@@ -12,7 +12,7 @@ const getters = {
 
 const actions = {
 	async createStudent({ commit }, formInput) {
-		const response = await axios.post("/students", formInput);
+		const response = await axios.post("/api/students", formInput);
 		const { status, data } = response
 		switch (status) {
 			case 200:
@@ -25,12 +25,25 @@ const actions = {
 		return response
 
 	},
-	async getStudents({ commit }) {
-		const response = await axios.get("/students");
+	async getStudents({ commit, state }) {
+		if(state.loadedOnce) return false;
+		const response = await axios.get("/api/students");
 		const { status, data } = response
 		switch (status) {
 			case 200:
 				data.success ? commit("LIST_SUCCESS", data) : null
+				break;
+			default:
+		}
+		return response
+	},
+	async updateAvailability({ commit, state }, params) {
+		if(state.loadedOnce) return false;
+		const response = await axios.post("/api/updateAvailability", params);
+		const { status, data } = response
+		switch (status) {
+			case 200:
+				data.success ? commit("CREATE_SUCCESS", data) : null
 				break;
 			default:
 		}

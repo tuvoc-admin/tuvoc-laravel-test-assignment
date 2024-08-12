@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Student;
 use App\Models\StudentAvailability;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class StudentAvailabilityController extends Controller
             'sunday' => 'required|boolean',
         ]);
         if ($validator->fails()) {
-            return response()->json(['success'=>false,'message' => $validator->errors()]);
+            return response()->json(['success' => false ,'message' => $validator->errors()]);
         }
         // Retrieve the validated data
         $validatedData = $validator->validated();
@@ -32,11 +33,12 @@ class StudentAvailabilityController extends Controller
             ['student_id' => $validatedData['student_id']], // Condition to check for existing record
             $validatedData // Data to update or create with
         );
+        $student = Student::find($validatedData['student_id']);
 
         return response()->json(['success'=>true,
                                 'message' => $availability->wasRecentlyCreated
                                     ? 'Student availability created successfully.'
                                     : 'Student availability updated successfully.',
-                                'data' => $availability]);
+                                'student' => $student->load('avaibilities')]);
     }
 }

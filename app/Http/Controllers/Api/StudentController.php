@@ -17,7 +17,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::get();
+        $students = Student::with('avaibilities')->get();
         return response()->json(['success'=>true,'message'=>'success', 'students' => $students]);
     }
 
@@ -32,7 +32,7 @@ class StudentController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'email' => 'required|email|unique:students,email',
             'phone' => 'nullable|string|max:20',

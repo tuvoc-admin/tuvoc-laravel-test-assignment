@@ -2,13 +2,16 @@
 
 import axios from 'axios';
 import store from '@/store'
-
+const token = localStorage.getItem('token')
 const axiosInstance = axios.create({
-  baseURL: `${import.meta.env.VITE_APP_URL}/api`,
+  baseURL: `${import.meta.env.VITE_APP_URL}`,
   withCredentials: true, 
+  withXSRFToken: true, 
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
-    // Add any other headers you need
+    'Content-Type': 'multipart/form-data; charset=UTF-8',
+	'Accept': 'application/json',
+	'Authorization': `Bearer ${token}`,
   },
 });
 
@@ -17,6 +20,14 @@ const axiosInstance = axios.create({
  */
 axiosInstance.interceptors.response.use(
 	(response) => {
+		let { data, status } = response || {};
+		if(status === 200){
+			if(data?.token){
+				updateToken(data.token)
+			}else if(data?.logout){
+				updateToken(null)
+			}
+		}
 		return response
 	},
 	(error) => {
@@ -46,4 +57,8 @@ axiosInstance.interceptors.response.use(
 		}
 	}
 );
+
+function updateToken(token){
+	axiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
+}
 export default axiosInstance;

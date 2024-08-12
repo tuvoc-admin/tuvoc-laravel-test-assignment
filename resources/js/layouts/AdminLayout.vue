@@ -8,10 +8,15 @@
         :to="{ name: 'dashboard' }"
         >Student App</v-list-item
       >
-      <v-divider></v-divider>
       <v-list-item :to="{ name: 'students' }">
         <v-list-item-content>
           <v-list-item-title>Students</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-list-item @click="logOut">
+        <v-list-item-content>
+          <v-list-item-title>Logout</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-navigation-drawer>
@@ -31,6 +36,7 @@
 </template>
     
   <script>
+import { mapActions } from 'vuex';
 export default {
   name: "AdminLayout",
   computed: {
@@ -40,6 +46,15 @@ export default {
       },
     },
   },
+  methods: {
+    ...mapActions('auth', ['logout']),
+    async logOut(){
+      const res = await this.logout()
+      if(res.status === 200){
+        this.$router.push({name: 'login'})
+      }
+    }
+  }
 };
 </script>
     

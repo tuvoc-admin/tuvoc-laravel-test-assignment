@@ -1,9 +1,10 @@
 export const adminRoutes = [{
     path: '/',
     component: () => import("@/layouts/AdminLayout.vue"),
+    redirect: '/dashboard',
     children: [
         {
-            path: '',
+            path: 'dashboard',
             name: 'dashboard',
             meta: {
                 title: "Dashboard",

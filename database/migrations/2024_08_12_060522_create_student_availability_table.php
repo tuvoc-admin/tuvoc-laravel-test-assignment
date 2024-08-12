@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('student_availability', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
+            $table->foreignId('student_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->boolean('monday')->default(0);
             $table->boolean('tuesday')->default(0);
             $table->boolean('wednesday')->default(0);
@@ -22,9 +22,6 @@ return new class extends Migration
             $table->boolean('saturday')->default(0);
             $table->boolean('sunday')->default(0);
             $table->timestamps();
-
-             // Foreign key constraint
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
     }
 

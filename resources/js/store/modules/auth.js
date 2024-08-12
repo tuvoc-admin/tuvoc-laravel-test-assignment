@@ -5,7 +5,8 @@ import router from '@/routes';
 const state = {
 	user: {},
 	loading: false,
-	loadedOnce: false
+	loadedOnce: false,
+	token: null,
 };
 
 const getters = {
@@ -18,7 +19,7 @@ const getters = {
 const actions = {
 	async login({ commit }, formInput) {
 		await axios.get("/sanctum/csrf-cookie");
-		const response = await axios.post("/login", formInput);
+		const response = await axios.post("/api/login", formInput);
 		const { status, data } = response
 		switch (status) {
 			case 200:
@@ -32,8 +33,9 @@ const actions = {
 
 	},
 	async getAuthUser({ commit }) {
-		await axios.get("/sanctum/csrf-cookie");
-		const response = await axios.get("/auth");
+		console.log(axios.defaults.headers.common.Authorization, 'axios');
+		
+		const response = await axios.get("/api/user");
 		const { status, data } = response
 		switch (status) {
 			case 200:
@@ -44,7 +46,7 @@ const actions = {
 		return response
 	},
 	async logout({ commit }) {
-		const response = await axios.post("/logout");
+		const response = await axios.post("/api/logout");
 		const { status } = response
 		switch (status) {
 			case 200:
@@ -67,6 +69,8 @@ const mutations = {
 		state.user = user
 		state.loading = false
 		state.loadedOnce = true;
+		state.token = data.token;
+		localStorage.setItem('token', data.token)
 	},
 	'LOGIN_ERROR': state => {
 		state.status = "error";
@@ -82,6 +86,7 @@ const mutations = {
 	'LOGOUT_SUCCESS': state => {
 		state.loading = false
 		state.user = {}
+		localStorage.removeItem('token')
 	},
 	'UNAUTHORIZED': (state, redirectTo) => {
 		state.user = {}

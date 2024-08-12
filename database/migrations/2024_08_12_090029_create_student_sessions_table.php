@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('student_sessions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
+            $table->foreignId('student_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->boolean('is_recurring')->default(false);
             $table->timestamps();
-
-            // Foreign key constraints
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
     }
 

@@ -9,7 +9,7 @@
             required></v-text-field>
         </v-form>
       </v-card-text>
-      <v-alert v-if="errMsg" border="left" color="red" :icon="$mdiAccount" type="error">{{ errMsg }}</v-alert>
+      <v-alert v-if="errMsg" border="left" color="red" type="error">{{ errMsg }}</v-alert>
       <v-card-actions class="d-flex justify-center">
         <v-btn color="primary" @click="attemptLogin" :loading="loading" :disabled="!valid || loading">Login</v-btn>
       </v-card-actions>
