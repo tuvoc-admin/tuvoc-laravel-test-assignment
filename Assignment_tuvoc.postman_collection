@@ -8,11 +8,8 @@
 	"item": [
 		{
 			"name": "login",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -24,13 +21,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/login",
+					"raw": "http://localhost:8000/api/login",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"localhost"
 					],
 					"port": "8000",
 					"path": [
@@ -44,11 +38,21 @@
 		{
 			"name": "addStudent",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "2|WlO7tUe36CL2pkrmtsaXeLic64KLB7MuMhaz2F2Z46286db6",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"token\":\"1-b04965e6-a9bb-591f-8f8a-1adcb2c8dc39\",\r\n    \"first_name\":\"test\",\r\n    \"middle_name\":\"middlename\",\r\n    \"last_name\":\"lname\",\r\n    \"date_of_birth\":\"16-12-1996\",\r\n    \"email\":\"test@tuvoc.com\",\r\n    \"phone\":\"789456123\"\r\n}",
+					"raw": "{\r\n    \"first_name\":\"test\",\r\n    \"middle_name\":\"middlename\",\r\n    \"last_name\":\"lname\",\r\n    \"date_of_birth\":\"1996-12-16\",\r\n    \"email\":\"test1@tuvoc.com\",\r\n    \"phone\":\"789456123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -56,13 +60,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/students",
+					"raw": "http://localhost:8000/api/students",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"localhost"
 					],
 					"port": "8000",
 					"path": [
@@ -83,7 +84,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"token\":\"1-b04965e6-a9bb-591f-8f8a-1adcb2c8dc39\"\r\n}",
+					"raw": "{\r\n    \"token\":\"7|0gGCOJjKq2R1JRo052lXk6YPN3wHs3COjLaQvThJeecc7bce\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -91,13 +92,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/students",
+					"raw": "http://localhost:8000/api/students",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"localhost"
 					],
 					"port": "8000",
 					"path": [
@@ -111,11 +109,21 @@
 		{
 			"name": "updateAvailability",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "2|WlO7tUe36CL2pkrmtsaXeLic64KLB7MuMhaz2F2Z46286db6",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"token\":\"1-b04965e6-a9bb-591f-8f8a-1adcb2c8dc39\",\r\n    \"student_id\": 3,\r\n    \"monday\": 1,\r\n    \"tuesday\": 1,\r\n    \"wednesday\": 1,\r\n    \"thursday\": 1,\r\n    \"friday\": 1,\r\n    \"saturday\": 0,\r\n    \"sunday\": 0\r\n}",
+					"raw": "{\r\n    \"student_id\": 3,\r\n    \"monday\": 1,\r\n    \"tuesday\": 1,\r\n    \"wednesday\": 1,\r\n    \"thursday\": 1,\r\n    \"friday\": 1,\r\n    \"saturday\": 0,\r\n    \"sunday\": 0\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -143,11 +151,21 @@
 		{
 			"name": "scheduleSession",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "2|WlO7tUe36CL2pkrmtsaXeLic64KLB7MuMhaz2F2Z46286db6",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"token\":\"1-b04965e6-a9bb-591f-8f8a-1adcb2c8dc39\",\r\n    \"student_id\": 2,\r\n    \"start_time\": \"2024-08-12 16:20:22\",\r\n    \"session_time\": 10,\r\n    \"is_recurring\": 1\r\n}",
+					"raw": "{\r\n    \"student_id\": 2,\r\n    \"start_time\": \"2024-08-13 16:20:22\",\r\n    \"session_time\": 10,\r\n    \"is_recurring\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -175,11 +193,21 @@
 		{
 			"name": "rateSession",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "2|WlO7tUe36CL2pkrmtsaXeLic64KLB7MuMhaz2F2Z46286db6",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"token\":\"1-b04965e6-a9bb-591f-8f8a-1adcb2c8dc39\",\r\n    \"session_id\": 2,\r\n    \"rating\": 9\r\n}",
+					"raw": "{\r\n    \"session_id\": 2,\r\n    \"rating\": 9\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
