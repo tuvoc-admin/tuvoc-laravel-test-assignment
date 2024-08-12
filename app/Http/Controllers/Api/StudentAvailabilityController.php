@@ -39,6 +39,6 @@ class StudentAvailabilityController extends Controller
                                 'message' => $availability->wasRecentlyCreated
                                     ? 'Student availability created successfully.'
                                     : 'Student availability updated successfully.',
-                                'student' => $student->load('avaibilities')]);
+                                'student' => $student->load('availability')]);
     }
 }

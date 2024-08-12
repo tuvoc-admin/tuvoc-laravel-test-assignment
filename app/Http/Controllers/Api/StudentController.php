@@ -17,7 +17,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::with('avaibilities')->get();
+        $students = Student::with('availability')->get();
         return response()->json(['success'=>true,'message'=>'success', 'students' => $students]);
     }
 

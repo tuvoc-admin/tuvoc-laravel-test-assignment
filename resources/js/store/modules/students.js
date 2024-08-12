@@ -38,7 +38,6 @@ const actions = {
 		return response
 	},
 	async updateAvailability({ commit, state }, params) {
-		if(state.loadedOnce) return false;
 		const response = await axios.post("/api/updateAvailability", params);
 		const { status, data } = response
 		switch (status) {

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 
 class Student extends Model
@@ -25,7 +26,7 @@ class Student extends Model
         'phone',
     ];
 
-    public function avaibilities(): HasMany {
-        return $this->hasMany(StudentAvailability::class);
+    public function availability(): HasOne {
+        return $this->hasOne(StudentAvailability::class);
     }
 }

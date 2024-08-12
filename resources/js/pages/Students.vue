@@ -1,7 +1,21 @@
 <template>
   <v-container>
     <v-btn color="primary" class="mb-8" elevation="2" @click="createStudentModal = true">Add Student</v-btn>
-    <v-data-table :headers="headers" :items="students" :items-per-page="10" class="elevation-1">
+    <v-data-table :headers="headers" :items="items" :items-per-page="10" class="elevation-1">
+      <template v-slot:item.availability="{ item }">
+        <template v-if="!isEmpty(item.availability)">
+          <span
+            v-for="(d, dk) in item.aval_days"
+            :key="`day_${dk}`"
+            :style="{backgroundColor: d.color, marginRight: '2px', borderRadius: '50%', padding: '2px', color: '#fff'}"
+          >
+            {{ d.day }}
+          </span>
+        </template>
+        <template v-else>
+          --
+        </template>
+      </template>
       <template v-slot:item.actions="{ item }">
         <v-btn color="primary" elevation="1" small @click="openAvailibilityModal(item)">Avaibility</v-btn>
       </template>
@@ -32,8 +46,11 @@
             </v-row>
           </v-form>
           <template v-if="!isEmpty(errors)">
-            <v-alert v-for="(errMsg, ek) in errors" border="left" color="red" type="error" :key="`error_${ek}`">{{
-              errMsg }}</v-alert>
+            <v-alert color="red" type="error" :icon="false">
+              <div v-for="(errMsg, ek) in errors" :key="`error_${ek}`">
+                {{ ek + 1 }}). {{ errMsg }}
+              </div>
+            </v-alert>
           </template>
         </v-card-text>
         <v-card-actions>
@@ -56,25 +73,48 @@
           <v-form ref="student_form" v-model="validForm">
             <v-row>
               <v-col cols="12">
-                <v-checkbox v-model="day.monday" :label="`Monday`"></v-checkbox>
-              </v-col>
-              <v-col cols="12">
-                <v-checkbox v-model="day.tuesday" :label="`Tuesday`"></v-checkbox>
-              </v-col>
-              <v-col cols="12">
-                <v-checkbox v-model="day.wednesday" :label="`Wednesday`"></v-checkbox>
-              </v-col>
-              <v-col cols="12">
-                <v-checkbox v-model="day.thursday" :label="`Thursday`"></v-checkbox>
-              </v-col>
-              <v-col cols="12">
-                <v-checkbox v-model="day.friday" :label="`Friday`"></v-checkbox>
-              </v-col>
-              <v-col cols="12">
-                <v-checkbox v-model="day.saturday" :label="`Saturday`"></v-checkbox>
-              </v-col>
-              <v-col cols="12">
-                <v-checkbox v-model="day.sunday" :label="`Suday`"></v-checkbox>
+                <div>
+                  <label>
+                    <span class="mr-1">Monday</span>
+                    <input type="checkbox" v-model="day.monday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">tuesday</span>
+                    <input type="checkbox" v-model="day.tuesday" :label="`tuesday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">wednesday</span>
+                    <input type="checkbox" v-model="day.wednesday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">thursday</span>
+                    <input type="checkbox" v-model="day.thursday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">friday</span>
+                    <input type="checkbox" v-model="day.friday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">saturday</span>
+                    <input type="checkbox" v-model="day.saturday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">sunday</span>
+                    <input type="checkbox" v-model="day.sunday" :label="`Monday`">
+                  </label>
+                </div>
               </v-col>
             </v-row>
           </v-form>
@@ -85,7 +125,7 @@
             Close
           </v-btn>
           <v-btn color="blue darken-1" @click="saveAvaibility" :loading="loading" :disabled="loading" text>
-            Save
+            Save Avaibility
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -96,7 +136,15 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { dcdLrvlValdtnErr, isEmpty } from "@/helpers"
-
+const days = [
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday',
+]
 export default {
   name: "Students",
   data: () => ({
@@ -111,6 +159,7 @@ export default {
       { text: 'Last Name', value: 'last_name' },
       { text: 'Email', value: 'email' },
       { text: 'Date fo birth', value: 'date_of_birth' },
+      { text: 'Availability', value: 'availability', sortable: false },
       { text: 'Actions', value: 'actions', sortable: false },
     ],
     form: {
@@ -131,13 +180,6 @@ export default {
     createStudentModal: false,
     availibilityModal: false,
     day: {
-      monday: false,
-      tuesday: false,
-      wednesday: false,
-      thursday: false,
-      friday: false,
-      saturday: false,
-      sunday: false,
     },
     loading: false,
     errors: [],
@@ -166,23 +208,65 @@ export default {
         this.loading = false
       }
     },
-    openAvailibilityModal(item){
+    openAvailibilityModal(item) {
       this.currentStudent = item
+      if(!isEmpty(item?.availability)){
+        const availability = item.availability
+        days.forEach(day => {
+          if(availability[day]){
+            this.day[day] = true
+          }
+        })
+      }
       this.availibilityModal = true
     },
-    async saveAvaibility(){
+    async saveAvaibility() {
       this.loading = true
-      const res = this.updateAvailability({
-        ...this.day,
-        student_id: this.currentStudent.id
+      const form = new FormData()
+      days.forEach(day => {
+        form.append(day, this.day[day] ? 1 : 0)
       })
+      form.append('student_id', this.currentStudent.id)
+      const res = await this.updateAvailability(form)
+      if(res?.status === 200 && res?.data?.success){
+        this.currentStudent = {}
+        this.availibilityModal = false
+      }
       this.loading = false
+    },
+    resetDays(){
+      days.forEach(day => {
+        this.day[day] = false
+      })
     }
   },
   computed: {
     ...mapGetters('student', ['students']),
+    items: {
+      get(){
+        return this.students.map(i => {
+          const aval_days = days.map(d => {
+            const d_name = d.substring(0, 1).toUpperCase()
+            let isAvail = false
+            if(!isEmpty(i?.availability)){
+              isAvail = i.availability[d] ? true : false
+            }
+            return {
+              day: d_name,
+              isAvail,
+              color: isAvail ? 'green' : 'red'
+            }
+          })
+          return {
+            ...i,
+            aval_days
+          }
+        })
+      }
+    }
   },
   mounted() {
+    this.resetDays()
     this.getStudents()
   }
 }
