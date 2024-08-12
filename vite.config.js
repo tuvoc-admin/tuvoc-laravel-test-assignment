@@ -10,4 +10,9 @@ export default defineConfig({
         }),
         vue(), // Use Vue 2 plugin
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+        },
+    },
 });
