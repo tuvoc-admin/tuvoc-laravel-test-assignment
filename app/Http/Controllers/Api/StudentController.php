@@ -17,8 +17,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::all();
-        return response()->json(['success'=>true,'message'=>'success', 'data' => $students]);
+        $students = Student::with('avaibilities')->get();
+        return response()->json(['success'=>true,'message'=>'success', 'students' => $students]);
     }
 
     /**
@@ -32,14 +32,15 @@ class StudentController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'nullable|string|max:255',
-            'date_of_birth' => 'required|date_format:d-m-Y',
+            'last_name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
             'email' => 'required|email|unique:students,email',
             'phone' => 'nullable|string|max:20',
         ]);
-
+        
         $dateOfBirth = trim($request->date_of_birth);
-		$formattedDateOfBirth = Carbon::createFromFormat('d-m-Y', $dateOfBirth)->format('Y-m-d');
+		// $formattedDateOfBirth = Carbon::createFromFormat('d-m-Y', $dateOfBirth)->format('Y-m-d');
+		$formattedDateOfBirth = $dateOfBirth;
 
         if ($validator->fails()) {
             return response()->json(['success'=>false,'message' => $validator->errors()]);
@@ -53,6 +54,6 @@ class StudentController extends Controller
 	        'email' => $request->input('email'),
 	        'phone' => $request->input('phone'),
 	    ]);
-        return response()->json(['success'=>true,'message'=>'success', 'data' => $student]);
+        return response()->json(['success'=>true,'message'=>'success', 'student' => $student]);
     }
 }

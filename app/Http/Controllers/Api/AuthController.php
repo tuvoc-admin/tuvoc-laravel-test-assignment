@@ -3,33 +3,47 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Webpatser\Uuid\Uuid;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function user(Request $request){
+        return response()->json([
+            'success' => true,
+            'user' => $request->user(),
+        ]);
+    }
+
     public function login(Request $request)
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+        $user = User::where('email', $request->email)->first();
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+        $token = $user->createToken('web')->plainTextToken;
+        return response()->json([
+            'success' => true,
+            'message' => 'success', 
+            'user' => $user,
+            'token' => $token
+        ]);
+    }
 
-        $user = User::where('email', '=', $email)->first();
-        if (!$user) {
-            return response()->json(['success'=>false, 'message' => 'Login Fail, please check email id']);
-        }
-        if (! \Hash::check($password, $user->password)) {
-            return response()->json(['success'=>false, 'message' => 'Login Fail, pls check password']);
-        }
-
-        if(empty($user->uuid))
-        {
-            //add uuid
-            $currentUser = $user;
-            $currentUser->uuid = $currentUser->id.'-'.Uuid::generate(5, $user->id, Uuid::NS_DNS);
-            $saved  = $currentUser->save();
-            return response()->json(['success'=>true,'message'=>'success', 'data' => $currentUser]);
-        }
-        return response()->json(['success'=>true,'message'=>'success', 'data' => $user]);
+    public function logout(Request $request){
+        $user = $request->user();
+        $user->tokens()->delete();
+        return response()->json([
+            'success' => true,
+            'logout' => true,
+        ]);
     }
 }
