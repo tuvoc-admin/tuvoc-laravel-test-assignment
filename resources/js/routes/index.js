@@ -1,19 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { userRoutes } from '@/routes/users.routes.js'
+import { adminRoutes } from '@/routes/admin.routes'
+import store from '@/store'
+
 Vue.use(VueRouter)
 
 const routes = [
-    ...userRoutes,
     {
-        path: '',
-        name: 'dashboard',
-        meta: {
-            title: "Dashboard",
-            auth: true
-        },
-        component: () => import("@/pages/Dashboard.vue"),
+        path: '/login',
+        component: () => import("@/layouts/LoginLayout.vue"),
+        children: [
+            {
+                path: '',
+                name: 'login',
+                meta: {
+                    title: "Login",
+                    auth: true
+                },
+                component: () => import("@/pages/auth/Login.vue"),
+            },
+        ]
     },
+    ...adminRoutes,
 ]
 
 const router = new VueRouter({
@@ -25,6 +33,17 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+    if (to.matched.some(record => record.meta.auth)) {
+        const res = await store.dispatch('auth/getAuthUser', null, { root: true });
+        // if (res?.status !== 200) {
+        //     let redirect = {
+        //         name: 'login',
+        //     }
+        //     next(redirect)
+        //     return;
+        // }
+    }
+    next();
 });
 
 export default router
