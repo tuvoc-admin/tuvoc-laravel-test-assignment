@@ -40,7 +40,7 @@
 
 ### User authentication Module 
 	- user can authenticate using below details
-	- email: test@example.com, password:123456
+	- email: test@example.com, password: 123456
 
 ### Students Module
 	- Create student
