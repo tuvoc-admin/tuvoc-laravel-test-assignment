@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('student_targets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student_id');
-            $table->unsignedBigInteger('session_id');
+            $table->foreignId('student_id')->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('session_id')->nullable()->constrained('student_sessions')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('subject')->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->integer('target');
             $table->timestamps();
-            
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreign('session_id')->references('id')->on('student_sessions')->onDelete('cascade');
         });
     }
 

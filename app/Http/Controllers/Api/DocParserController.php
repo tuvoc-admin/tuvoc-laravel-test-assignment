@@ -12,14 +12,15 @@ use Carbon\Carbon;
 
 class DocParserController extends Controller
 {
-     public function parse(Request $request)
+    public function parse(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'docx_file' => 'required|file|mimes:doc,docx',
             'session_id' => 'exists:student_sessions,id',
+            'student_id' => 'required|exists:students,id',
         ]);
-         if ($validator->fails()) {
-            return response()->json(['success' => false ,'message' => $validator->errors()]);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()]);
         }
         // Retrieve the validated data
         $validatedData = $validator->validated();
@@ -52,68 +53,67 @@ class DocParserController extends Controller
         $tables = $xml->xpath('//w:tbl');
         $dates = [];
 
-        $i=0;
+        $i = 0;
         foreach ($tables as $table) {
             $rows = $table->xpath('.//w:tr');
             $rowCount = count($rows);
-            if($rowCount==4){
+            if ($rowCount == 4) {
                 // print_r($rowCount); exit;
                 $rows = $table->xpath('.//w:tr');
-                    // Skip the first row if it's a header row
-                    foreach ($rows as $row) {
-                        // Process each row to extract data
-                        $cells = $row->xpath('.//w:tc');
-                        if (count($cells) > 4) { // Ensure there are at least 4 cells
-                            $startDate = $this->getCellText($cells[2]);
-                            $endDate = $this->getCellText($cells[3]);
-                            $target = $this->getCellText($cells[4]);
-                            if($this->isDate($startDate)){
-                                $dates[$i]['startDate'] =  Carbon::parse($startDate)->toDateString();
-                            }
-                            if($this->isDate($endDate)){
-                                $dates[$i]['endDate'] =  Carbon::parse($endDate)->toDateString();
-                            }
-                            if (isset($dates[$i]['startDate']) && isset($dates[$i]['endDate'])) {
-                                $dates[$i]['target'] = $target;
-                                $i++;
-                            }
+                // Skip the first row if it's a header row
+                foreach ($rows as $row) {
+                    // Process each row to extract data
+                    $cells = $row->xpath('.//w:tc');
+                    if (count($cells) > 4) { // Ensure there are at least 4 cells
+                        $startDate = $this->getCellText($cells[2]);
+                        $endDate = $this->getCellText($cells[3]);
+                        $target = $this->getCellText($cells[4]);
+                        if ($this->isDate($startDate)) {
+                            $dates[$i]['startDate'] =  Carbon::parse($startDate)->toDateString();
+                        }
+                        if ($this->isDate($endDate)) {
+                            $dates[$i]['endDate'] =  Carbon::parse($endDate)->toDateString();
+                        }
+                        if (isset($dates[$i]['startDate']) && isset($dates[$i]['endDate'])) {
+                            $dates[$i]['target'] = $target;
+                            $i++;
                         }
                     }
+                }
             }
             // Extract rows and cells
-            $text='';
+            $text = '';
             foreach ($table->xpath('.//w:tr') as $row) {
-                if(count($row->xpath('.//w:tc'))==4){
+                if (count($row->xpath('.//w:tc')) == 4) {
                     foreach ($row->xpath('.//w:tc') as $cell) {
                         $text = $this->getCellText($cell);
 
                         if (isset($dates[$i]['startDate']) && isset($dates[$i]['endDate'])) {
-                                $dates[$i]['target'] = str_ireplace('per session', '', $text);
-                                $i++;
-                            }
+                            $dates[$i]['target'] = str_ireplace('per session', '', $text);
+                            $i++;
+                        }
 
                         if (preg_match('/(\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/', $this->getCellText($cell), $matches)) {
-                                $dates[$i]['startDate'] = $matches[1];
-                                $dates[$i]['endDate'] = $matches[2];
-                            }
+                            $dates[$i]['startDate'] = $matches[1];
+                            $dates[$i]['endDate'] = $matches[2];
+                        }
                     }
-                   
-                }else{
+                } else {
 
                     $old = $text;
                     foreach ($row->xpath('.//w:tc') as $cell) {
                         $text = $this->getCellText($cell);
-                            if (stripos($old, 'target') !== false &&  isset($dates[$i]['startDate']) && isset($dates[$i]['endDate'])) {
-                                $dates[$i]['target'] = $text;
-                                $i++;
+                        if (stripos($old, 'target') !== false &&  isset($dates[$i]['startDate']) && isset($dates[$i]['endDate'])) {
+                            $dates[$i]['target'] = $text;
+                            $i++;
+                        }
+                        if ($this->isDate($text)) {
+                            if (stripos($old, 'Start Date') !== false) {
+                                $dates[$i]['startDate'] =  Carbon::parse($text)->toDateString();
+                            } elseif (stripos($old, 'End Date') !== false) {
+                                $dates[$i]['endDate'] =  Carbon::parse($text)->toDateString();
                             }
-                            if ($this->isDate($text)) {
-                                if (stripos($old, 'Start Date') !== false) {
-                                     $dates[$i]['startDate'] =  Carbon::parse($text)->toDateString();
-                                } elseif (stripos($old, 'End Date') !== false) {
-                                     $dates[$i]['endDate'] =  Carbon::parse($text)->toDateString();
-                                } 
-                            }
+                        }
                     }
                 }
             }
@@ -129,7 +129,7 @@ class DocParserController extends Controller
             ]);
         }
 
-        return response()->json(['success'=>true,'message'=>'File parsed and data saved successfully.']);
+        return response()->json(['success' => true, 'message' => 'File parsed and data saved successfully.']);
     }
 
     private function getCellText($cell)
