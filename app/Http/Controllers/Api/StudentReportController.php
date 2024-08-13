@@ -31,8 +31,8 @@ class StudentReportController extends Controller
 
     try {
         $report = GenerateReport::orderBy('id', 'desc')->first();
-
-        if ($report) {
+        
+        if ($report) { 
             $report->update([
                 'student_full_name' => $data['student_full_name'],
                 'session_date' => $data['session_date'],

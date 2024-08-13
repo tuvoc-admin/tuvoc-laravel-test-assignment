@@ -23,7 +23,7 @@
     <v-dialog v-model="createStudentModal" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="text-h5">Create Student</span>
+          <span class="text-h5">Create Schedule Session</span>
         </v-card-title>
         <v-card-text>
           <v-form ref="student_form" v-model="validForm">
@@ -73,13 +73,48 @@
           <v-form ref="student_form" v-model="validForm">
             <v-row>
               <v-col cols="12">
-                <v-checkbox
-                  v-for="(d, dk) in allDays"
-                  :key="`chk_${dk}`"
-                  v-model="day[d]"
-                  :label="d.toUpperCase()"
-                  color="indigo darken-3"
-                ></v-checkbox>
+                <div>
+                  <label>
+                    <span class="mr-1">Monday</span>
+                    <input type="checkbox" v-model="day.monday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">Tuesday</span>
+                    <input type="checkbox" v-model="day.tuesday" :label="`tuesday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">Wednesday</span>
+                    <input type="checkbox" v-model="day.wednesday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">Thursday</span>
+                    <input type="checkbox" v-model="day.thursday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">Friday</span>
+                    <input type="checkbox" v-model="day.friday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">Saturday</span>
+                    <input type="checkbox" v-model="day.saturday" :label="`Monday`">
+                  </label>
+                </div>
+                <div>
+                  <label>
+                    <span class="mr-1">Sunday</span>
+                    <input type="checkbox" v-model="day.sunday" :label="`Monday`">
+                  </label>
+                </div>
               </v-col>
             </v-row>
           </v-form>
@@ -127,7 +162,6 @@ export default {
       { text: 'Availability', value: 'availability', sortable: false },
       { text: 'Actions', value: 'actions', sortable: false },
     ],
-    allDays: days,
     form: {
       first_name: null,
       middle_name: null,
@@ -168,9 +202,9 @@ export default {
           if (!isEmpty(errors)) {
             this.errors = errors
           }
-        } else if (res?.data?.success) {
+        } else if (res?.data?.success) [
           this.createStudentModal = false
-        }
+        ]
         this.loading = false
       }
     },
