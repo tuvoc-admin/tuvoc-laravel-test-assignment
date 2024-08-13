@@ -32,6 +32,7 @@
 - Start a queue worker to process the email notification jobs: ```php artisan queue:work```
 - Your application should now be run at your localhost
 - If your application running via `127.0.0.1:8000` then change the `.env`'s `APP_URL` varible with `127.0.0.1:8000` instead of `localhost:8000`
+- ***NOTE*** If `.env`'s `APP_URL` is diffrent than the app running domain, it causes the `CORS` error for api calls
 
 ## Enable the zip extension
 -  in `php.ini` file, Search for the line `;extension=zip` Remove the semicolon to enable the extension
