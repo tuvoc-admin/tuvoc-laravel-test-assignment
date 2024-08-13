@@ -32,6 +32,9 @@
 - Start a queue worker to process the email notification jobs: php artisan queue:work
 - Your application should now be run at your localhost
 
+## Enable the zip extension
+-  in php.ini file, Search for the line ;extension=zip.Remove the semicolon ;
+
 ## About Project
 - Program to track student sessions
 
@@ -51,4 +54,5 @@
 	- updateAvailability
 	- scheduleSession
 	- rateSession
+	- parseTargetDocx
 
