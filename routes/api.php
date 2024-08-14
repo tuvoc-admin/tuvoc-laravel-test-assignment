@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\StudentAvailabilityController;
+use App\Http\Controllers\Api\ReportTemplateController;
 use App\Http\Controllers\Api\StudentSessionController;
 use App\Http\Controllers\Api\StudentReportController;
 use App\Http\Controllers\Api\StudentController;
@@ -21,6 +22,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/scheduleSession', [StudentSessionController::class, 'scheduleSession']);
     Route::post('/rateSession', [StudentSessionController::class, 'rateSession']);
-    
-    Route::post('/generatereports', [StudentReportController::class, 'generateOrUpdateReport']);
+
+    Route::get('/report-template', [ReportTemplateController::class, 'getTemplate']);
+
+    Route::put('/report-template', [ReportTemplateController::class, 'updateTemplate']);
 });
