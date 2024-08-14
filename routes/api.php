@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\StudentAvailabilityController;
 use App\Http\Controllers\Api\ReportTemplateController;
 use App\Http\Controllers\Api\StudentSessionController;
+use App\Http\Controllers\Api\DocParserController;
 use App\Http\Controllers\Api\StudentReportController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\AuthController;
@@ -22,6 +23,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/scheduleSession', [StudentSessionController::class, 'scheduleSession']);
     Route::post('/rateSession', [StudentSessionController::class, 'rateSession']);
+
+    Route::post('/parceDocx', [DocParserController::class, 'parse']);
 
     Route::get('/report-template', [ReportTemplateController::class, 'getTemplate']);
 

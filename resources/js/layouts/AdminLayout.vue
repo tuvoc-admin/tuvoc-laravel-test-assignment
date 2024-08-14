@@ -13,6 +13,11 @@
           <v-list-item-title>Students</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item :to="{ name: 'upload-session' }">
+        <v-list-item-content>
+          <v-list-item-title>Upload Session</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
       <v-divider></v-divider>
       <v-list-item @click="logOut">
         <v-list-item-content>

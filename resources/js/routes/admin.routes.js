@@ -20,6 +20,15 @@ export const adminRoutes = [{
                 auth: true
             },
             component: () => import("@/pages/Students.vue"),
+        },
+        {
+            path: 'upload-session',
+            name: 'upload-session',
+            meta: {
+                title: "Upload Session",
+                auth: true
+            },
+            component: () => import("@/pages/UploadSession.vue"),
         }
     ]
 }]
