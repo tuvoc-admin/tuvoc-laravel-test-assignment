@@ -57,6 +57,7 @@
 	- addStudent
 	- listStudent
 	- updateAvailability
+    - report-template (get/update template)
 	- scheduleSession
 	- rateSession
 	- parseTargetDocx
